@@ -22,6 +22,10 @@ test-functional:
 test-all:
 	@docker-compose exec -T $(PHP_SERVICE) bin/phpunit tests
 
+test-init-database:
+	@mkdir -p var/data
+	@docker-compose exec -T $(PHP_SERVICE) bin/console doctrine:schema:create --env=test
+
 down:
 	@docker-compose down --volumes
 	@make -s clean

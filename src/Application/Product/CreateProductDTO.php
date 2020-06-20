@@ -15,12 +15,12 @@ class CreateProductDTO
     private Money $price;
     private int $stock;
 
-    public function __construct(string $reference, string $name, float $money, string $currency, string $stock)
+    public function __construct(string $reference, string $name, float $money, string $currency, int $stock)
     {
         $this->reference = new Reference($reference);
         $this->name      = $name;
         $this->price     = new Money($money, new Currency($currency));
-        $this->stock     = (int) $stock;
+        $this->stock     = $stock;
     }
 
     public function reference(): Reference

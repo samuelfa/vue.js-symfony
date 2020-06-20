@@ -18,7 +18,7 @@ class ProductCreateController extends AbstractController
             $dto = new CreateProductDTO(
                 $request->request->get('reference'),
                 $request->request->get('name'),
-                $request->request->getDigits('money'),
+                $request->request->get('money'),
                 $request->request->get('currency'),
                 $request->request->getInt('stock'),
             );
