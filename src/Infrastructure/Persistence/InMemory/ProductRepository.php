@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Infrastructure\Persistence\InMemory;
-
 
 use App\Domain\Product\Product;
 use App\Domain\ValueObject\Reference;
@@ -18,11 +16,10 @@ class ProductRepository implements \App\Domain\Product\ProductRepository
     public function __construct(array $list)
     {
         $this->list = [];
-        foreach ($list as $element){
+        foreach ($list as $element) {
             $this->list[(string) $element->reference()] = $element;
         }
     }
-
 
     public function findOneByReference(Reference $reference): ?Product
     {

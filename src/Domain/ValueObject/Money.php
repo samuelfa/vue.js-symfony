@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\ValueObject;
-
 
 final class Money
 {
@@ -27,25 +25,27 @@ final class Money
 
     public function sum(?self $money): self
     {
-        if($money === null){
+        if (null === $money) {
             return $this;
         }
 
-        if(!$this->currency->equals($money->currency())){
+        if (!$this->currency->equals($money->currency())) {
             throw new InvalidCurrency($money->currency);
         }
 
         $value = $this->quantity() + $money->quantity();
+
         return new self($value, $this->currency);
     }
 
     public function subtract(self $money): self
     {
-        if(!$this->currency->equals($money->currency())){
+        if (!$this->currency->equals($money->currency())) {
             throw new InvalidCurrency($money->currency);
         }
 
         $value = $this->quantity() - $money->quantity();
+
         return new self($value, $this->currency);
     }
 

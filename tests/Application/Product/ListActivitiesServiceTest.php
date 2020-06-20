@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Test\Application\Product;
 
-
-use App\Application\Product\ProductListService;
+use App\Application\Product\Collection\ProductListService;
 use App\Application\Transform\MoneyTransform;
 use App\Application\Transform\ProductTransform;
 use App\Domain\Product\Product;
@@ -22,9 +20,9 @@ class ListActivitiesServiceTest extends TestCase
     protected function setUp(): void
     {
         $this->repository = new ProductRepository([]);
-        $moneyTransform   = new MoneyTransform();
+        $moneyTransform = new MoneyTransform();
         $productTransform = new ProductTransform($moneyTransform);
-        $this->handler    = new ProductListService($this->repository, $productTransform);
+        $this->handler = new ProductListService($this->repository, $productTransform);
     }
 
     public function testListActivities(): void
@@ -33,15 +31,15 @@ class ListActivitiesServiceTest extends TestCase
             '54-ABCDEFGH' => 'Red pen',
             '34-gasfgiug' => 'Blue pen',
             '24-asfgsIUY' => 'Blackboard',
-            '14-asgJFJLK' => 'Note'
+            '14-asgJFJLK' => 'Note',
         ];
         $currencies = ['EUR', 'USD'];
-        foreach ($values as $reference => $name){
+        foreach ($values as $reference => $name) {
             $money = random_int(1, 350) / 100;
             $keyCurrency = array_rand($currencies);
             $currency = $currencies[$keyCurrency];
             $stock = random_int(0, 5000);
-            $this->createActivity($reference, $name, $money, $currency, $stock);
+            $this->createProduct($reference, $name, $money, $currency, $stock);
         }
 
         $expectedList = $this->repository->findAll();
@@ -51,7 +49,7 @@ class ListActivitiesServiceTest extends TestCase
         $givenList = $this->handler->__invoke();
         $this->assertCount(4, $givenList);
 
-        foreach ($givenList as $rawProduct){
+        foreach ($givenList as $rawProduct) {
             $originalName = $values[$rawProduct['reference']];
             $product = $this->repository->findOneByReference(new Reference($rawProduct['reference']));
             $this->assertInstanceOf(Product::class, $product);
@@ -67,7 +65,7 @@ class ListActivitiesServiceTest extends TestCase
         }
     }
 
-    private function createActivity(string $reference, string $name, float $money, string $currency, int $stock): void
+    private function createProduct(string $reference, string $name, float $money, string $currency, int $stock): void
     {
         $activity = new Product(
             new Reference($reference),

@@ -7,3 +7,8 @@ product_list:
   path: /product/list
   methods: GET
   controller: App\Infrastructure\Symfony\Controller\ProductListController::view
+
+product_delete:
+  path: /product/{reference}
+  methods: DELETE
+  controller: App\Infrastructure\Symfony\Controller\ProductDeleteController::view

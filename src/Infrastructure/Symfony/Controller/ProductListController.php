@@ -1,10 +1,8 @@
 <?php
 
-
 namespace App\Infrastructure\Symfony\Controller;
 
-
-use App\Application\Product\ProductListService;
+use App\Application\Product\Collection\ProductListService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ProductListController

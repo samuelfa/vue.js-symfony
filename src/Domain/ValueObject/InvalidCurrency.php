@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Domain\ValueObject;
-
 
 final class InvalidCurrency extends \RuntimeException
 {
@@ -10,5 +8,4 @@ final class InvalidCurrency extends \RuntimeException
     {
         parent::__construct(sprintf('Invalid currency provided %s', $currency->value()));
     }
-
 }

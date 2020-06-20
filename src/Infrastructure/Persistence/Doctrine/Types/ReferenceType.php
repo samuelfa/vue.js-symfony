@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Infrastructure\Persistence\Doctrine\Types;
 
 use App\Domain\ValueObject\Reference;
@@ -22,9 +21,10 @@ class ReferenceType extends StringType
     public function convertToPHPValue($value, AbstractPlatform $platform)
     {
         $value = parent::convertToPHPValue($value, $platform);
-        if($value === null){
+        if (null === $value) {
             return null;
         }
+
         return new Reference($value);
     }
 

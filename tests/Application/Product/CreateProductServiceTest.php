@@ -1,15 +1,13 @@
 <?php
 
-
 namespace Test\Application\Product;
 
-
-use App\Application\Product\CreateProductDTO;
-use App\Application\Product\CreateProductService;
-use App\Application\Product\EmptyName;
-use App\Application\Product\InvalidCurrency;
-use App\Application\Product\InvalidPrice;
-use App\Application\Product\InvalidStock;
+use App\Application\Product\Create\CreateProductDTO;
+use App\Application\Product\Create\CreateProductService;
+use App\Application\Product\Create\EmptyName;
+use App\Application\Product\Create\InvalidCurrency;
+use App\Application\Product\Create\InvalidPrice;
+use App\Application\Product\Create\InvalidStock;
 use App\Infrastructure\Persistence\InMemory\ProductRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -109,11 +107,10 @@ class CreateProductServiceTest extends TestCase
     private function createProduct(
         string $reference,
         string $name,
-        float  $money,
+        float $money,
         string $currency,
-        int    $stock
-    ): void
-    {
+        int $stock
+    ): void {
         $dto = new CreateProductDTO(
             $reference,
             $name,
@@ -124,5 +121,4 @@ class CreateProductServiceTest extends TestCase
 
         $this->handler->__invoke($dto);
     }
-
 }

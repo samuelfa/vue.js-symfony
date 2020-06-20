@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Test\Functional;
 
 use App\Domain\Product\Product;
@@ -29,14 +28,13 @@ class ProductRequestsTest extends WebTestCase
     public function testCreateProductAndList(): void
     {
         $client = static::createClient();
-        $values = [
-            'reference' => '54-ABCDEFGH',
-            'name' => 'Red Pen',
-            'money' => 2.25,
-            'currency' => 'EUR',
-            'stock' => 50,
-        ];
-        $client->xmlHttpRequest('PUT', '/product', $values);
+
+        $reference = '54-ABCDEFGH';
+        $name = 'Red pen';
+        $money = 2.25;
+        $currency = 'EUR';
+        $stock = 50;
+        $this->createProduct($client, $reference, $name, $money, $currency, $stock);
 
         $response = $client->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -46,11 +44,31 @@ class ProductRequestsTest extends WebTestCase
 
         [$product] = $list;
 
-        $this->assertEquals($values['reference'], $product['reference']);
-        $this->assertEquals($values['name'], $product['name']);
-        $this->assertEquals($values['money'], $product['price']['value']);
-        $this->assertEquals($values['currency'], $product['price']['currency']);
-        $this->assertEquals($values['stock'], $product['stock']);
+        $this->assertEquals($reference, $product['reference']);
+        $this->assertEquals($name, $product['name']);
+        $this->assertEquals($money, $product['price']['value']);
+        $this->assertEquals($currency, $product['price']['currency']);
+        $this->assertEquals($stock, $product['stock']);
+    }
+
+    public function testDeleteProduct(): void
+    {
+        $client = static::createClient();
+
+        $reference = '54-ABCDEFGH';
+        $name = 'Red pen';
+        $money = 2.25;
+        $currency = 'EUR';
+        $stock = 50;
+        $this->createProduct($client, $reference, $name, $money, $currency, $stock);
+
+        $client->xmlHttpRequest('DELETE', '/product/'.$reference);
+
+        $response = $client->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $list = $this->listProducts($client);
+        $this->assertCount(0, $list);
     }
 
     private function listProducts(KernelBrowser $client): array
@@ -61,6 +79,7 @@ class ProductRequestsTest extends WebTestCase
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
 
         $content = $response->getContent();
+
         return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
     }
 
@@ -87,5 +106,17 @@ class ProductRequestsTest extends WebTestCase
         return self::$kernel->getContainer()
             ->get('doctrine')
             ->getManager();
+    }
+
+    private function createProduct(KernelBrowser $client, string $reference, string $name, float $money, string $currency, int $stock): void
+    {
+        $values = [
+            'reference' => $reference,
+            'name' => $name,
+            'money' => $money,
+            'currency' => $currency,
+            'stock' => $stock,
+        ];
+        $client->xmlHttpRequest('PUT', '/product', [], [], [], json_encode($values, JSON_THROW_ON_ERROR));
     }
 }

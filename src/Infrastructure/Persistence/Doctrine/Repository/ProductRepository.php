@@ -1,12 +1,10 @@
 <?php
 
-
 namespace App\Infrastructure\Persistence\Doctrine\Repository;
 
-
-use App\Domain\ValueObject\Reference;
-use App\Domain\Product\ProductRepository as ProductRepositoryInterface;
 use App\Domain\Product\Product;
+use App\Domain\Product\ProductRepository as ProductRepositoryInterface;
+use App\Domain\ValueObject\Reference;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -25,13 +23,15 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
 
     public function findOneByReference(Reference $reference): ?Product
     {
-        /** @var null|Product $entity */
+        /** @var Product|null $entity */
         $entity = $this->find((string) $reference);
+
         return $entity;
     }
 
     public function remove(Product $product): void
     {
         $this->_em->remove($product);
+        $this->_em->flush();
     }
 }
