@@ -1,10 +1,13 @@
-var path = require('path')
-var webpack = require('webpack')
+// noinspection NodeCoreCodingAssistance,JSUnresolvedFunction
+const path = require('path');
+// noinspection JSUnresolvedFunction
+const webpack = require('webpack');
 
+// noinspection JSUnresolvedVariable
 module.exports = {
   entry: './src/main.js',
   output: {
-    path: path.resolve(__dirname, './dist'),
+    path: path.resolve(__dirname, '../public/dist'),
     publicPath: '/dist/',
     filename: 'build.js'
   },
@@ -21,7 +24,6 @@ module.exports = {
         test: /\.scss$/,
         use: [
           'vue-style-loader',
-          'style-loader',
           'css-loader',
           'sass-loader'
         ],
