@@ -65,6 +65,9 @@ db-diff:
 db-migrate:
 	@docker-compose exec -T $(PHP_SERVICE) php bin/console doctrine:migrations:migrate
 
+db-fixtures:
+	@docker-compose exec -T $(PHP_SERVICE) php bin/console doctrine:fixtures:load
+
 debug-router:
 	@docker-compose exec -T $(PHP_SERVICE) php bin/console debug:router
 

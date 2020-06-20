@@ -6,6 +6,7 @@ So, to run the project follow these instructions:
 1. Execute ``make dcup``
 2. Execute ``make composer-install``
 3. Execute ``make db-migrate``
+4. Execute ``make db-fixtures``
 
 At this moment the project is able to visit at:
 
