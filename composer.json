@@ -1,4 +1,6 @@
 {
+    "name": "sfa/vue.js.with.symfony",
+    "description": "Technical exercise with Vue.js and Symfony",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -7,7 +9,6 @@
         "ext-iconv": "*",
         "ext-json": "*",
         "ext-pdo": "*",
-        "sensio/framework-extra-bundle": "^5.5",
         "sensiolabs/security-checker": "^6.0",
         "symfony/asset": "4.3.*",
         "symfony/console": "^4.3",

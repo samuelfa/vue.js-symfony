@@ -47,6 +47,9 @@ vendor: composer.json composer.lock
 composer-update:
 	@docker-compose exec -T $(PHP_SERVICE) composer update
 
+composer-install: composer.json composer.lock
+	@docker-compose exec -T $(PHP_SERVICE) composer update
+
 composer-require:
 	@docker-compose exec -T $(PHP_SERVICE) composer require $(filter-out $@,$(MAKECMDGOALS));
 
