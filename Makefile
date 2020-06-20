@@ -47,8 +47,7 @@ console:
 	@docker-compose exec -T $(PHP_SERVICE) php bin/console $(filter-out $@,$(MAKECMDGOALS));
 
 db-diff:
-	@docker-compose exec -T $(PHP_SERVICE) php bin/console make:migration --em=default
-	@docker-compose exec -T $(PHP_SERVICE) php bin/console make:migration --em=crm
+	@docker-compose exec -T $(PHP_SERVICE) php bin/console make:migration
 
 db-migrate:
 	@docker-compose exec -T $(PHP_SERVICE) php bin/console doctrine:migrations:migrate

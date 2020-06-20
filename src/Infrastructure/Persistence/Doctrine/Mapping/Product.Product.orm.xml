@@ -9,9 +9,9 @@
 
         <field name="name" column="name" length="150" />
         <field name="price" column="price" type="money" />
-        <field name="stock" column="stock" type="int">
+        <field name="stock" column="stock" type="integer">
             <options>
-                <option name="unsigned" />
+                <option name="unsigned">1</option>
             </options>
         </field>
         <field name="createdAt" type="datetime_immutable" column="created_at" />
