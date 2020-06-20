@@ -6,7 +6,7 @@ use App\Domain\ValueObject\Reference;
 
 interface ProductRepository
 {
-    public function findOneByReference(Reference $nif): ?Product;
+    public function findOneByReference(Reference $reference): ?Product;
     /**
      * @return Product[]
      * @noinspection ReturnTypeCanBeDeclaredInspection

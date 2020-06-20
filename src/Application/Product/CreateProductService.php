@@ -24,15 +24,19 @@ class CreateProductService
     public function __invoke(CreateProductDTO $dto): void
     {
         if(empty($dto->name())){
-            throw new \RuntimeException('Empty name given');
+            throw new EmptyName();
         }
 
         if($dto->price()->quantity() <= 0){
-            throw new \RuntimeException('The money quantity must be higher than zero');
+            throw new InvalidPrice();
         }
 
         if(!in_array($dto->price()->currency(), $this->currencies, false)){
-            throw new \RuntimeException('Invalid currency provided');
+            throw new InvalidCurrency();
+        }
+
+        if($dto->stock() < 0){
+            throw new InvalidStock();
         }
 
         $product = new Product(

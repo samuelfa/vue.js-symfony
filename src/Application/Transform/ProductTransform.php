@@ -18,7 +18,7 @@ class ProductTransform
     public function toArray(Product $product): array
     {
         return [
-            'reference' => $product->reference(),
+            'reference' => (string) $product->reference(),
             'name' => $product->name(),
             'price' => $this->moneyTransform->toArray($product->price()),
             'stock' => $product->stock(),
