@@ -1,0 +1,16 @@
+.content {
+  padding: 30px 15px;
+  max-width: 1200px;
+  margin: auto;
+  text-align: left;
+}
+
+.router-link-exact-active {
+  color: orange;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+// Include Bootstrap and BootstrapVue SCSS files
+@import '~bootstrap/scss/bootstrap.scss';
+@import '~bootstrap-vue/src/index.scss';
