@@ -13,6 +13,12 @@ database:
 check: vendor
 	@docker-compose exec -T $(PHP_SERVICE) bin/console security:check
 
+test-unit:
+	@docker-compose exec -T $(PHP_SERVICE) bin/phpunit tests/Application
+
+test-functional:
+	@docker-compose exec -T $(PHP_SERVICE) bin/phpunit tests/Functional
+
 test-all:
 	@docker-compose exec -T $(PHP_SERVICE) bin/phpunit tests
 

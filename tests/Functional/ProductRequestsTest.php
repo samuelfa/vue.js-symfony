@@ -3,50 +3,89 @@
 
 namespace Test\Functional;
 
+use App\Domain\Product\Product;
+use Doctrine\ORM\EntityManager;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ProductRequestsTest extends WebTestCase
 {
-    private KernelBrowser $client;
-    protected function setUp(): void
+    public function setUp(): void
     {
-        $this->client = static::createClient();
+        self::bootKernel();
+        $this->truncateEntities([
+            Product::class,
+        ]);
     }
 
     public function testProductListEmpty(): void
     {
-        $crawler = $this->client->request('GET', '/register');
+        $client = static::createClient();
+        $list = $this->listProducts($client);
+        $this->assertCount(0, $list);
+    }
 
-        $this->assertEquals(Response::HTTP_OK, $this->client->getResponse()->getStatusCode());
+    public function testCreateProductAndList(): void
+    {
+        $client = static::createClient();
+        $values = [
+            'reference' => '54-ABCDEFGH',
+            'name' => 'Red Pen',
+            'money' => 2.25,
+            'currency' => 'EUR',
+            'stock' => 50,
+        ];
+        $client->xmlHttpRequest('PUT', '/product', $values);
 
-        $form = $crawler->filter('button')->form();
-
-        $form['namespace'] = 'functional';
-        $form['name'] = 'Company name';
-        $form['nif'] = '12345678Z';
-        $form['email_address'] = 'manager@functional.com';
-        $form['password'] = 'functional';
-
-        $this->client->submit($form);
-
-        /** @var RedirectResponse $response */
-        $response = $this->client->getResponse();
-
-        $this->assertInstanceOf(RedirectResponse::class, $response);
-        $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
-        $this->assertEquals('http://functional.crm.localhost/crm', $response->getTargetUrl());
-
-        $crawler = $this->client->followRedirect();
-
-        $response = $this->client->getResponse();
-        $this->assertInstanceOf(Response::class, $response);
+        $response = $client->getResponse();
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('http://functional.crm.localhost/crm', $this->client->getHistory()->current()->getUri());
 
-        $total = $crawler->filter('div.card-body button.btn-primary')->count();
-        $this->assertEquals(4, $total);
+        $list = $this->listProducts($client);
+        $this->assertCount(1, $list);
+
+        [$product] = $list;
+
+        $this->assertEquals($values['reference'], $product['reference']);
+        $this->assertEquals($values['name'], $product['name']);
+        $this->assertEquals($values['money'], $product['price']['value']);
+        $this->assertEquals($values['currency'], $product['price']['currency']);
+        $this->assertEquals($values['stock'], $product['stock']);
+    }
+
+    private function listProducts(KernelBrowser $client): array
+    {
+        $client->xmlHttpRequest('GET', '/product/list');
+
+        $response = $client->getResponse();
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+
+        $content = $response->getContent();
+        return json_decode($content, true, 512, JSON_THROW_ON_ERROR);
+    }
+
+    private function truncateEntities(array $entities): void
+    {
+        $connection = $this->getEntityManager()->getConnection();
+        $databasePlatform = $connection->getDatabasePlatform();
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=0');
+        }
+        foreach ($entities as $entity) {
+            $query = $databasePlatform->getTruncateTableSQL(
+                $this->getEntityManager()->getClassMetadata($entity)->getTableName()
+            );
+            $connection->executeUpdate($query);
+        }
+        if ($databasePlatform->supportsForeignKeyConstraints()) {
+            $connection->query('SET FOREIGN_KEY_CHECKS=1');
+        }
+    }
+
+    private function getEntityManager(): EntityManager
+    {
+        return self::$kernel->getContainer()
+            ->get('doctrine')
+            ->getManager();
     }
 }
