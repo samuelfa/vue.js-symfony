@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html
+      - ./.docker/nginx/conf.d/:/etc/nginx/conf.d/
+      - ./.docker/nginx/certs/localhost.crt:/etc/certs/localhost.crt
+      - ./.docker/nginx/certs/localhost.key:/etc/certs/localhost.key
+    networks:
+      - app-network
+    depends_on:
+      - php
+      - db
+
+  php:
+    build:
+      context: .
+      dockerfile: .docker/php/Dockerfile
+    tty: true
+    environment:
+      SERVICE_NAME: app
+      SERVICE_TAGS: dev
+      XDEBUG_CONFIG: remote_host=10.254.254.254
+      PHP_IDE_CONFIG: "serverName=localhost"
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html:delegated
+      - ./.docker/php/conf.d/:/usr/local/etc/php/conf.d/
+      - ./.docker/php.ini:/usr/local/etc/php/php.ini
+    networks:
+      - app-network
+
+  db:
+    image: mariadb:latest
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_DATABASE: 'flat101_products'
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

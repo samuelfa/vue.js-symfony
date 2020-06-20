@@ -1,0 +1,27 @@
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                driver: 'pdo_mysql'
+                server_version: '10.4'
+                charset: utf8mb4
+
+        types:
+            reference:
+                class: App\Infrastructure\Persistence\Doctrine\Types\ReferenceType
+            money:
+                class: App\Infrastructure\Persistence\Doctrine\Types\MoneyType
+
+    orm:
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    Product:
+                        is_bundle: false
+                        type: xml
+                        dir: '%kernel.project_dir%/src/Infrastructure/Persistence/Doctrine/Mapping'
+                        prefix: 'App\Domain'

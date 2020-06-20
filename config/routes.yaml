@@ -1,0 +1,9 @@
+product_create:
+  path: /product
+  methods: PUT
+  controller: App\Infrastructure\Symfony\Controller\ProductCreateController::view
+
+product_list:
+  path: /product/list
+  methods: GET
+  controller: App\Infrastructure\Symfony\Controller\ProductListController::view
