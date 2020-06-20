@@ -4,14 +4,13 @@
 namespace App\Infrastructure\Symfony\Controller;
 
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Application\Product\ProductListService;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 
-class ProductListController extends AbstractController
+class ProductListController
 {
-    public function view(string $locale, Request $request): JsonResponse
+    public function view(ProductListService $service): JsonResponse
     {
-        //TODO:...
+        return new JsonResponse($service->__invoke());
     }
 }

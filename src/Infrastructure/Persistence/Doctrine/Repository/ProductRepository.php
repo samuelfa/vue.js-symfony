@@ -20,6 +20,7 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
     public function save(Product $product): void
     {
         $this->_em->persist($product);
+        $this->_em->flush();
     }
 
     public function findOneByReference(Reference $reference): ?Product
@@ -27,11 +28,6 @@ class ProductRepository extends ServiceEntityRepository implements ProductReposi
         /** @var null|Product $entity */
         $entity = $this->find((string) $reference);
         return $entity;
-    }
-
-    public function flush(): void
-    {
-        $this->_em->flush();
     }
 
     public function remove(Product $product): void
